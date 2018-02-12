@@ -1,4 +1,4 @@
-version: "3"
+version: "2"
 services:
 
   bitbucket:
@@ -8,3 +8,34 @@ services:
       - 7999:7999
     volumes:
       - ./bitbucket:/var/atlassian/application-data/bitbucket
+
+  drone-server:
+    image: drone/drone:0.8
+    ports:
+      - 80:8000
+      - 9000:9000
+    volumes:
+      - ./drone:/var/lib/drone/
+    environment:
+      - DRONE_OPEN=true
+      - DRONE_HOST=http://localhost
+      - DRONE_STASH=true
+      - DRONE_STASH_GIT_USERNAME=drone
+      - DRONE_STASH_GIT_PASSWORD=drone
+      - DRONE_STASH_CONSUMER_KEY=95c0282573633eb25e82
+      - DRONE_STASH_CONSUMER_RSA=/etc/bitbucket/key.pem
+      - DRONE_STASH_URL=http://bitbucket:7990
+      - DRONE_SECRET=123456
+    volumes:
+      - ./drone:/var/lib/drone/
+      - ./bitbucketkey.pem:/etc/bitbucket/key.pem
+
+  drone-agent:
+    image: drone/agent:0.8
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=drone-server:9000
+      - DRONE_SECRET=123456
