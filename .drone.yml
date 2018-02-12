@@ -1,3 +1,0 @@
-pipeline:
-  install:
-    image: hello-world

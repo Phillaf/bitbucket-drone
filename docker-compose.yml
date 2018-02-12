@@ -18,7 +18,7 @@ services:
       - ./drone:/var/lib/drone/
     environment:
       - DRONE_OPEN=true
-      - DRONE_HOST=http://localhost
+      - DRONE_HOST=http://drone-server
       - DRONE_STASH=true
       - DRONE_STASH_GIT_USERNAME=drone
       - DRONE_STASH_GIT_PASSWORD=drone
